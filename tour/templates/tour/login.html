@@ -1,0 +1,33 @@
+{% extends "base.html" %} {% load static %} {% block content %}
+
+<!-- ==========Login Section Section Starts Here========== -->
+<div class="login-section padding-top padding-bottom">
+  <div class="container">
+    <div class="account-wrapper">
+      <h3 class="title">Вход</h3>
+      <div class="">
+        <form method="post" action="" class="">
+          {% csrf_token %}
+           <div class="form-group">
+            <label for="exampleInputEmail1" class="black-text">Логин</label>
+            {{ form.username }}
+          </div>
+          <div class="form-group">
+            <label for="exampleInputPassword1"  class="black-text">Пароль</label>
+            {{ form.password }}
+          </div>
+          <button type="submit" class="btn btn-primary">Войти</button>
+        </form>
+      </div>
+      
+      <div class="account-bottom">
+        <span class="d-block cate pt-10"
+          >Нету аккаунта?
+          <a href="{% url 'tourism:register' %}">Зарегестрироваться</a></span
+        >
+      </div>
+      <!-- ==========Login Section Section Ends Here========== -->
+      {% endblock content %}
+    </div>
+  </div>
+</div>

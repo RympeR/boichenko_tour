@@ -196,7 +196,7 @@ class TransfersAdmin(admin.ModelAdmin):
 @admin.register(Users)
 class UsersAdmin(UserAdmin):
     list_display = (
-        'pk', 'first_name', 'last_name',
+        'pk', 'username', 'first_name', 'last_name',
     )
     list_display_links = (
         'pk',
@@ -215,10 +215,11 @@ class UsersAdmin(UserAdmin):
             'phone',
             'address',
             'first_name',
-            'last_name',     
+            'last_name',
         )}),
         (_('Permissions'), {
             'fields': ('is_active', 'is_staff', 'is_superuser', 'groups', 'user_permissions'),
         }),
-        (_('Important dates'), {'fields': ('dateofbirthday', 'last_login', 'date_joined')}),
+        (_('Important dates'), {
+         'fields': ('dateofbirthday', 'last_login', 'date_joined')}),
     )

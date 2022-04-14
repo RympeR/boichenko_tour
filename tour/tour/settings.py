@@ -32,14 +32,13 @@ INSTALLED_APPS = [
     'allauth.account',
     'allauth.socialaccount',
     'django_filters',
-    'silk',
     'apps.tourism',
 
 ]
 
-ACCOUNT_EMAIL_REQUIRED=True
+ACCOUNT_EMAIL_REQUIRED = True
 SITE_ID = 1
-ACCOUNT_EMAIL_VERIFICATION="none"
+ACCOUNT_EMAIL_VERIFICATION = "none"
 
 ACCOUNT_FORMS = {
     'login': 'allauth.account.forms.LoginForm',
@@ -100,16 +99,25 @@ AUTH_USER_MODEL = "tourism.Users"
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'Tourist2',
+        'NAME': 'Tourism2',
         'USER': 'tourism_dev',
         'PASSWORD': 'tourism_dev',
         'HOST': 'localhost',
         'PORT': '5432',
     }
 }
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql_psycopg2',
+#         'NAME': os.environ.get('POSTGRES_NAME'),
+#         'USER': os.environ.get('POSTGRES_USER'),
+#         'PASSWORD': os.environ.get('POSTGRES_PASSWORD'),
+#         'HOST': 'db',
+#         'PORT': 5432,
+#     }
+# }
 
 # Password validation
-# https://docs.djangoproject.com/en/4.0/ref/settings/#auth-password-validators
 
 AUTH_PASSWORD_VALIDATORS = [
     # {
@@ -149,9 +157,10 @@ STATIC_URL = '/static/'
 MEDIA_URL = '/media/'
 PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-STATIC_ROOT = os.path.join(BASE_DIR, "static")
+STATIC_ROOT = os.path.join(PROJECT_ROOT, "static")
 
 STATICFILES_DIRS = [
+  os.path.join(BASE_DIR, 'static'),
 ]
 
 STATICFILES_FINDERS = [

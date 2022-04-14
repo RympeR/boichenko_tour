@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+{% load static %}
+{% block main_content %}
+<!-- ==========Banner Section Starts Here========== -->
+<section class="page-header bg_img" data-background="{% static 'images/banner/page-header.jpg' %}">
+    <div class="container">
+        <div class="page-header-content">
+            <h1 class="title">Регистрация</h1>
+            <ul class="breadcrumb">
+                <li>
+                    <a href='{% url "lessons_section:index" %}'>Главная</a>
+                </li>
+                <li>
+                    Зарегистрируйтесь
+                </li>
+            </ul>
+        </div>
+    </div>
+</section>
+<!-- ==========Banner Section Ends Here========== -->
+
+
+<!-- ==========Login Section Section Starts Here========== -->
+<div class="login-section padding-top padding-bottom">
+    <div class="container">
+        <div class="account-wrapper">
+            <h3 class="title">Зарегистрироваться</h3>
+            <form method="POST" class="account-form" action='{% url "users_section:register" %}'>
+                {% csrf_token %}
+                <div class="form-group">
+                    {{ form.username }}
+                </div>
+                <div class="form-group">
+                    {{ form.fio }}
+                </div>
+                <div class="form-group">
+                    {{ form.password1 }}
+                </div>
+                <div class="form-group">
+                    {{ form.password2 }}
+                </div>
+                <div class="form-group">
+                    <span id='match' style="display:none">Пароли не совпадают</span>
+                    <button id="subm_btn" type="submit" class="d-block custom-button"><span>Зарегистрироваться</span></button>
+                </div>
+            </form>
+            <div class="account-bottom">
+                <span class="d-block cate pt-10">Есть аккаунт? <a href="{% url 'users_section:login' %}">Login</a></span>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- ==========Login Section Section Ends Here========== -->
+{% endblock main_content %}
+
+
+{% block custom_scripts %}
+<script>
+    $('#password, #confirm_password').on('keyup', function () {
+        if ($('#password').val() == $('#confirm_password').val()) {
+            $('#subm_btn').removeAttr('disabled');
+            $('#match').css('display', 'none');
+        } else {
+            $('#match').css('display', 'block');
+            $('#match').css('color', 'red');
+            $('#subm_btn').prop('disabled', true);
+        }
+    });
+</script>
+{% endblock custom_scripts %}

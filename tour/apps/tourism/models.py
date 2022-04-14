@@ -1,10 +1,12 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
+from django.urls import reverse
 
 
 class Users(AbstractUser):
     userid = models.AutoField(primary_key=True)
-    email = models.EmailField(max_length=255, unique=True, blank=True, null=True)
+    email = models.EmailField(
+        max_length=255, unique=True, blank=True, null=True)
     phone = models.CharField(max_length=13, blank=True, null=True)
     dateofbirthday = models.DateField(blank=True, null=True)
     address = models.CharField(max_length=255, blank=True, null=True)
@@ -49,10 +51,11 @@ class Users(AbstractUser):
 
         return self._create_user(password, email, username, **extra_fields)
 
+    def get_absolute_url(self):
+        return reverse('user-detail', kwargs={'pk': self.pk})
+
     class Meta:
-        verbose_name = 'Пользователь'
-        verbose_name_plural = 'Пользователи'
-        db_table = 'users'
+        verbose_name = 'Пользователь'        
 
 
 class Address(models.Model):
@@ -60,11 +63,7 @@ class Address(models.Model):
     name = models.CharField(max_length=255)
 
     def __str__(self):
-        return str(self.city) + ' ' + self.name
-
-    class Meta:
-        managed = False
-        db_table = 'address'
+        return str(self.city) + ' ' + self.name        
 
 
 class City(models.Model):
@@ -72,26 +71,18 @@ class City(models.Model):
     name = models.CharField(max_length=255)
 
     def __str__(self):
-        return self.country + ' ' + self.name
-
-    class Meta:
-        managed = False
-        db_table = 'city'
+        return self.country + ' ' + self.name        
 
 
 class Employees(models.Model):
     user = models.OneToOneField(
         Users, related_name='user_staff', on_delete=models.CASCADE)
-    passport = models.CharField(max_length=255)
+    passport = models.ImageField(upload_to='docs/', blank=True, null=True)
     address = models.CharField(max_length=255)
     employmentdate = models.DateField(auto_now_add=True)
 
     def __str__(self):
-        return self.user.username + ' ' + self.user.lastname
-
-    class Meta:
-        managed = False
-        db_table = 'employees'
+        return self.user.username + ' ' + self.user.lastname        
 
 
 class Hotels(models.Model):
@@ -101,19 +92,18 @@ class Hotels(models.Model):
     address = models.ForeignKey(
         Address, models.DO_NOTHING, db_column='address')
 
-    def __str__(self):
-        return self.title
+    def get_absolute_url(self):
+        return reverse('hotel-detail', kwargs={'pk': self.pk})
 
-    class Meta:
-        managed = False
-        db_table = 'hotels'
+    def __str__(self):
+        return self.title        
 
 
 class Roomorders(models.Model):
     ordernumber = models.AutoField(primary_key=True)
     userid = models.ForeignKey('Users', models.DO_NOTHING, db_column='userid')
     room = models.ForeignKey('Rooms', models.DO_NOTHING, db_column='room')
-    startdate = models.DateField()
+    startdate = models.DateField(auto_now_add=True)
     enddate = models.DateField()
     places = models.IntegerField()
     prices = models.IntegerField()
@@ -123,12 +113,11 @@ class Roomorders(models.Model):
     manager = models.ForeignKey(
         Employees, models.DO_NOTHING, db_column='manager')
 
-    def __str__(self):
-        return f'{self.ordernumber} {self.userid}'
+    def get_absolute_url(self):
+        return reverse('room-order', kwargs={'pk': self.pk})
 
-    class Meta:
-        managed = False
-        db_table = 'roomorders'
+    def __str__(self):
+        return f'{self.ordernumber} {self.userid}'        
 
 
 class Rooms(models.Model):
@@ -143,9 +132,8 @@ class Rooms(models.Model):
     def __str__(self):
         return f'{self.title} {self.hotel}'
 
-    class Meta:
-        managed = False
-        db_table = 'rooms'
+    def get_absolute_url(self):
+        return reverse('room-info', kwargs={'pk': self.pk})        
 
 
 class Roomsfeedback(models.Model):
@@ -157,11 +145,7 @@ class Roomsfeedback(models.Model):
     date = models.DateField()
 
     def __str__(self):
-        return f'{self.room} {self.title}'
-
-    class Meta:
-        managed = False
-        db_table = 'roomsfeedback'
+        return f'{self.room} {self.title}'        
 
 
 class Tourfeedback(models.Model):
@@ -173,18 +157,14 @@ class Tourfeedback(models.Model):
     date = models.DateField()
 
     def __str__(self):
-        return f'{self.tour} {self.title}'
-
-    class Meta:
-        managed = False
-        db_table = 'tourfeedback'
+        return f'{self.tour} {self.title}'        
 
 
 class Tourorders(models.Model):
     ordernumber = models.AutoField(primary_key=True)
     userid = models.ForeignKey('Users', models.DO_NOTHING, db_column='userid')
     tour = models.ForeignKey('Tours', models.DO_NOTHING, db_column='tour')
-    startdate = models.DateField()
+    startdate = models.DateField(auto_now=True)
     enddate = models.DateField()
     places = models.IntegerField()
     prices = models.IntegerField()
@@ -194,12 +174,11 @@ class Tourorders(models.Model):
     manager = models.ForeignKey(
         Employees, models.DO_NOTHING, db_column='manager')
 
-    def __str__(self):
-        return f'{self.ordernumber} {self.userid}'
+    def get_absolute_url(self):
+        return reverse('tour-order', kwargs={'pk': self.pk})
 
-    class Meta:
-        managed = False
-        db_table = 'tourorders'
+    def __str__(self):
+        return f'{self.ordernumber} {self.userid}'        
 
 
 class Tours(models.Model):
@@ -209,12 +188,11 @@ class Tours(models.Model):
     city = models.ForeignKey(City, models.DO_NOTHING, db_column='city')
     rating = models.IntegerField()
 
-    def __str__(self):
-        return f'{self.title} '
+    def get_absolute_url(self):
+        return reverse('tour-info', kwargs={'pk': self.pk})
 
-    class Meta:
-        managed = False
-        db_table = 'tours'
+    def __str__(self):
+        return f'{self.title} '        
 
 
 class Transferfeedback(models.Model):
@@ -227,11 +205,7 @@ class Transferfeedback(models.Model):
     date = models.DateField()
 
     def __str__(self):
-        return f'{self.transfer} {self.title}'
-
-    class Meta:
-        managed = False
-        db_table = 'transferfeedback'
+        return f'{self.transfer} {self.title}'        
 
 
 class Transferorders(models.Model):
@@ -249,12 +223,11 @@ class Transferorders(models.Model):
     manager = models.ForeignKey(
         Employees, models.DO_NOTHING, db_column='manager')
 
-    def __str__(self):
-        return f'{self.ordernumber} {self.userid}'
+    def get_absolute_url(self):
+        return reverse('transfer-order', kwargs={'pk': self.pk})
 
-    class Meta:
-        managed = False
-        db_table = 'transferorders'
+    def __str__(self):
+        return f'{self.ordernumber} {self.userid}'        
 
 
 class Transfers(models.Model):
@@ -268,6 +241,5 @@ class Transfers(models.Model):
     def __str__(self):
         return f'{self.title} {self.price}'
 
-    class Meta:
-        managed = False
-        db_table = 'transfers'
+    def get_absolute_url(self):
+        return reverse('transfer-info', kwargs={'pk': self.pk})        

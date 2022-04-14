@@ -1,0 +1,35 @@
+version: "3.9"
+
+services:
+  db:
+    build: .
+    image: postgres:10.0
+    volumes:
+      - /var/lib/postgresql/data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=Tourist2
+      - POSTGRES_USER=tourism_dev
+      - POSTGRES_PASSWORD=tourism_dev
+    networks:
+      - djangonetwork
+  web:
+    build: .
+    command: python manage.py runserver 127.0.0.1:8000
+    restart: always
+    ports:
+      - "8000:8000"
+    environment:
+      - POSTGRES_NAME=Tourist2
+      - POSTGRES_USER=tourism_dev
+      - POSTGRES_PASSWORD=tourism_dev
+    depends_on:
+      - db
+    links:
+      - db:db
+    networks:
+      - djangonetwork
+volumes:
+  db:
+networks:
+  djangonetwork:
+    driver: bridge

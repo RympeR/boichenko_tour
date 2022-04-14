@@ -1,0 +1,138 @@
+{% extends "base.html" %}
+{% block title %}
+{% endblock title %}
+
+{% block custom_css %}
+<style>
+    .sidenav {
+        height: 100%;
+        /* 100% Full-height */
+        width: 0;
+        /* 0 width - change this with JavaScript */
+        position: fixed;
+        /* Stay in place */
+        z-index: 1;
+        /* Stay on top */
+        top: 0;
+        /* Stay at the top */
+        left: 0;
+        background-color: #111;
+        /* Black*/
+        overflow-x: hidden;
+        /* Disable horizontal scroll */
+        padding-top: 60px;
+        /* Place content 60px from the top */
+        transition: 0.5s;
+        /* 0.5 second transition effect to slide in the sidenav */
+    }
+
+    .form-control {
+        max-width: 150px;
+    }
+
+    /* The navigation menu links */
+    .sidenav a {
+        padding: 8px 8px 8px 32px;
+        text-decoration: none;
+        font-size: 25px;
+        color: #ccc6c6;
+        display: block;
+        transition: 0.3s;
+    }
+
+    /* When you mouse over the navigation links, change their color */
+    .sidenav a:hover {
+        color: #f1f1f1;
+    }
+
+    /* Position and style the close button (top right corner) */
+    .sidenav .closebtn {
+        position: absolute;
+        top: 0;
+        right: 25px;
+        font-size: 36px;
+        margin-left: 50px;
+    }
+
+    form>p {
+        color: white;
+    }
+
+    /* Style page content - use this if you want to push the page content to the right when you open the side navigation */
+    #main {
+        transition: margin-left .5s;
+        padding: 20px;
+    }
+
+    /* On smaller screens, where height is less than 450px, change the style of the sidenav (less padding and a smaller font size) */
+    @media screen and (max-height: 450px) {
+        .sidenav {
+            padding-top: 15px;
+        }
+
+        .sidenav a {
+            font-size: 18px;
+        }
+    }
+</style>
+{% endblock custom_css %}
+
+{% block main_content %}
+<div id="mySidenav" class="sidenav">
+    <a href="javascript:void(0)" class="closebtn" style="color:white" onclick="closeNav()">X</a>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <input type="submit" value="Фильтр" class="btn btn-success">
+    </form>
+</div>
+<h1><button onclick="openNav()">Filters</button></h1>
+{% if data != '' %}
+<table class="table table-dark">
+    <thead class="thead-dark">
+        <tr>
+            <th scope="col">День</th>
+            <th scope="col">Начало экскурсии</th>
+            <th scope="col">Конец экскурсии</th>
+            <th scope="col">Тип экскурсии</th>
+            <th scope="col">Цена</th>
+        </tr>
+    </thead>
+    {% for row in data %}
+    <tr>
+        <th>{{ row.day_of_the_week }}</th>
+        <th>{{ row.start_time }}</th>
+        <th>{{ row.end_time }}</th>
+        <th>{{ row.excursion_numbers__start_of_route__route_name }}</th>
+        <th>{{ row.excursion_numbers__price }}</th>
+    </tr>
+    {% endfor %}
+</table>
+{% endif %}
+{% endblock main_content %}
+{% block side_script %}
+<script>
+    function openNav() {
+        document.getElementById("mySidenav").style.width = "250px";
+    }
+
+    /* Set the width of the side navigation to 0 */
+    function closeNav() {
+        document.getElementById("mySidenav").style.width = "0";
+    }
+</script>
+<script>
+    $(function () {
+        $("#datetimepicker1").datetimepicker({
+            format: 'YYYY-MM-DD HH:mm',
+        });
+    });
+</script>
+<script>
+    $(function () {
+        $("#datetimepicker2").datetimepicker({
+            format: 'YYYY-MM-DD',
+        });
+    });
+</script>
+{% endblock side_script %}
