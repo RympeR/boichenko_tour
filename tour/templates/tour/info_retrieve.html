@@ -5,11 +5,13 @@
     <link rel = "stylesheet" href = "{{ url_for('static',filename='css/Delete_Service.css') }}">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat&display=swap" rel="stylesheet">
     {% endblock %}
-{% block title %}Statistics{% endblock title %}
+{% block title %}{{ model_name }}{% endblock title %}
 {% block main_content %}
     <div class = "intro">
-        <h1>Посмотреть стоимость</h1>
-<div class = "container">
-</div>
-</div>    
+        {% if form %}
+            <h1>Посмотреть информацию</h1>
+            {{ form.as_p }}
+        {%  endif %}
+
+    <div class = "container">
 {% endblock main_content %}

@@ -192,7 +192,7 @@ class Tours(models.Model):
         return reverse('tour-info', kwargs={'pk': self.pk})
 
     def __str__(self):
-        return f'{self.title} '        
+        return f'{self.title}'
 
 
 class Transferfeedback(models.Model):

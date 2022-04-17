@@ -71,7 +71,7 @@ class PriceChangeView(View):
             model = Transferorders
 
         if model == "tour":
-            model = Tourordersz
+            model = Tourorders
 
         if model:
             model.objects.filter(pk=data.get("pk")).update(
@@ -83,7 +83,7 @@ class StatusRetrieveTourView(View):
     def get(self, request, pk, *args, **kwargs):
         return render(request, "tour/status_change.html", {
             "status": Tourorders.objects.filter(pk=pk).values("status")[0]["status"],
-            'obj_info': model.objects.get(pk=pk),
+            'obj_info': Tourorders.objects.get(pk=pk),
         })
 
 
@@ -91,7 +91,7 @@ class StatusRetrieveRoomView(View):
     def get(self, request, pk, *args, **kwargs):
         return render(request, "tour/status_change.html", {
             "status": Roomorders.objects.filter(pk=pk).values("status")[0]["status"],
-            'obj_info': model.objects.get(pk=pk),
+            'obj_info': Roomorders.objects.get(pk=pk),
         })
 
 
@@ -99,7 +99,7 @@ class StatusRetrieveTransferView(View):
     def get(self, request, pk, *args, **kwargs):
         return render(request, "tour/status_change.html", {
             "status": Transferorders.objects.filter(pk=pk).values("status")[0]["status"],
-            'obj_info': model.objects.get(pk=pk),
+            'obj_info': Transferorders.objects.get(pk=pk),
         })
 
 
@@ -118,12 +118,21 @@ class InfoRetrieveRoomView(View):
     def get(self, request, *args, **kwargs):
         data = request.query_params
         if data.get('pk'):
-            return redirect(model, pk=data.get('pk'))
+            return redirect(Rooms, pk=data.get('pk'))
         else:
             qs = Rooms.objects.all()
             return render(request, self.template_name, {
                 'model_name': 'Комнаты',
-                "info": qs
+                'form':
+            })
+        return render(request, self.template_name, {})
+
+    def post(self, request, *args, **kwargs):
+        data = request.data
+        if data.get('pk'):
+            return render(request, self.template_name, {
+                'model_name': 'Комнаты',
+                "info": Rooms.objects.get(pk=data.get('pk')),
             })
         return render(request, self.template_name, {})
 
@@ -308,6 +317,6 @@ def main(request):
     if request.user:
         user = request.user
         context['user'] = user
-        
+
 
     return render(request, 'tour/main.html', context=context)
