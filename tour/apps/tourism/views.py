@@ -1,82 +1,171 @@
+from dataclasses import dataclass
 from typing import Any, Dict
+
+from django.contrib.auth import (authenticate, login, logout,
+                                 update_session_auth_hash)
+from django.contrib.auth.forms import PasswordChangeForm
 from django.shortcuts import redirect, render
 from django.views import View
-from django.views.generic import (
-    ListView,
-    CreateView,
-)
-from django.contrib.auth import authenticate, login, logout
-from .forms import RegisterForm, UserLoginForm
-from .models import (
-    Roomorders,
-    Rooms,
-    Roomsfeedback,
-    Tourfeedback,
-    Tourorders,
-    Tours,
-    Transferfeedback,
-    Transferorders,
-    Transfers,
-    Users,
-)
-from dataclasses import dataclass
+from django.views.generic import CreateView, ListView
+
+from .forms import (ModelInfoRetrievePolicyRoomOrderForm,
+                    ModelInfoRetrievePolicyTourOrderForm,
+                    ModelInfoRetrievePolicyTransferOrderForm,
+                    ModelInfoRetrievePriceRoomOrderForm,
+                    ModelInfoRetrievePriceTourOrderForm,
+                    ModelInfoRetrievePriceTransferOrderForm,
+                    ModelInfoRetrieveRoomForm, ModelInfoRetrieveRoomOrderForm,
+                    ModelInfoRetrieveTourForm, ModelInfoRetrieveTourOrderForm,
+                    ModelInfoRetrieveTransferForm,
+                    ModelInfoRetrieveTransferOrderForm, ModelsRetrieveForm,
+                    RegisterForm, UserLoginForm)
+from .models import (Roomorders, Rooms, Roomsfeedback, Tourfeedback,
+                     Tourorders, Tours, Transferfeedback, Transferorders,
+                     Transfers, Users)
 
 
 class StatusChangeView(View):
+    template_name = "tour/status_change.html"
+
+    def get(self, request, *args, **kwargs):
+        return render(request, self.template_name, {
+            'form': ModelsRetrieveForm
+        })
+
     def post(self, request, *args, **kwargs):
+
         data = request.POST
-        model = None
-        if data.get("model") == "room":
-            model = Roomorders
+        if data.get('id_s'):
+            model = None
+            if data.get("model") == "room":
+                model = Roomorders
 
-        if data.get("model") == "transfer":
-            model = Transferorders
+            if data.get("model") == "transfer":
+                model = Transferorders
 
-        if data.get("model") == "tour":
-            model = Tourorders
+            if data.get("model") == "tour":
+                model = Tourorders
 
-        if model:
-            model.objects.filter(pk=data.get("pk")).update(
-                status=data.get("status"))
-        return render(request, "tour/status_change.html", {})
+            if model:
+                model.objects.filter(pk=data.get("id_s")).update(
+                    status=data.get("new_status"))
+                return render(request, self.template_name, {
+                    'form': ModelsRetrieveForm
+                })
+        else:
+            form = None
+            if data.get('models') == "room":
+                form = ModelInfoRetrieveRoomOrderForm
+
+            if data.get('models') == "transfer":
+                form = ModelInfoRetrieveTransferOrderForm
+
+            if data.get('models') == "tour":
+                form = ModelInfoRetrieveTourOrderForm
+            if form:
+                return render(request, self.template_name, {
+                    'form': form,
+                    'model': data.get('models')
+                })
+        return render(request, self.template_name, {
+            'form': ModelsRetrieveForm
+        })
 
 
 class PolicyChangeView(View):
+    template_name = "tour/insurancepolicy_change.html"
+
+    def get(self, request, *args, **kwargs):
+        return render(request, self.template_name, {
+            'form': ModelsRetrieveForm
+        })
+
     def post(self, request, *args, **kwargs):
+
         data = request.POST
-        model = None
-        if data.get("model") == "room":
-            model = Roomorders
+        if data.get('id_s'):
+            model = None
+            if data.get("model") == "room":
+                model = Roomorders
 
-        if data.get("model") == "transfer":
-            model = Transferorders
+            if data.get("model") == "transfer":
+                model = Transferorders
 
-        if data.get("model") == "tour":
-            model = Tourorders
+            if data.get("model") == "tour":
+                model = Tourorders
 
-        if model:
-            model.objects.filter(pk=data.get("pk")).update(
-                insurancepolicy=data.get("insurancepolicy"))
-        return render(request, "tour/insurancepolicy_change.html", {})
+            if model:
+                model.objects.filter(pk=data.get("id_s")).update(
+                    status=data.get("policy"))
+                return render(request, self.template_name, {
+                    'form': ModelsRetrieveForm
+                })
+        else:
+            form = None
+            if data.get('models') == "room":
+                form = ModelInfoRetrievePolicyRoomOrderForm
+
+            if data.get('models') == "transfer":
+                form = ModelInfoRetrievePolicyTransferOrderForm
+
+            if data.get('models') == "tour":
+                form = ModelInfoRetrievePolicyTourOrderForm
+            if form:
+                return render(request, self.template_name, {
+                    'form': form,
+                    'model': data.get('models')
+                })
+        return render(request, self.template_name, {
+            'form': ModelsRetrieveForm
+        })
 
 
 class PriceChangeView(View):
+    template_name = "tour/price_change.html"
+
+    def get(self, request, *args, **kwargs):
+        return render(request, self.template_name, {
+            'form': ModelsRetrieveForm
+        })
+
     def post(self, request, *args, **kwargs):
+
         data = request.POST
-        model = None
-        if model == "room":
-            model = Roomorders
+        if data.get('id_s'):
+            model = None
+            if data.get("model") == "room":
+                model = Roomorders
 
-        if model == "transfer":
-            model = Transferorders
+            if data.get("model") == "transfer":
+                model = Transferorders
 
-        if model == "tour":
-            model = Tourorders
+            if data.get("model") == "tour":
+                model = Tourorders
 
-        if model:
-            model.objects.filter(pk=data.get("pk")).update(
-                insurpricesancepolicy=data.get("prices"))
-        return render(request, "tour/price_change.html", {})
+            if model:
+                model.objects.filter(pk=data.get("id_s")).update(
+                    prices=data.get("price"))
+                return render(request, self.template_name, {
+                    'form': ModelsRetrieveForm
+                })
+        else:
+            form = None
+            if data.get('models') == "room":
+                form = ModelInfoRetrievePriceRoomOrderForm
+
+            if data.get('models') == "transfer":
+                form = ModelInfoRetrievePriceTransferOrderForm
+
+            if data.get('models') == "tour":
+                form = ModelInfoRetrievePriceTourOrderForm
+            if form:
+                return render(request, self.template_name, {
+                    'form': form,
+                    'model': data.get('models')
+                })
+        return render(request, self.template_name, {
+            'form': ModelsRetrieveForm
+        })
 
 
 class StatusRetrieveTourView(View):
@@ -104,11 +193,17 @@ class StatusRetrieveTransferView(View):
 
 
 class ChangePasswordView(View):
+    def get(self, request, *args, **kwargs):
+        return render(request, "tour/change_password.html", {
+            'form': PasswordChangeForm
+        })
+
     def post(self, request, *args, **kwargs):
-        data = request.POST
-        user = request.user
-        user.set_password(data['password'])
-        user.save()
+        form = PasswordChangeForm(data=request.POST, user=request.user)
+
+        if form.is_valid():
+            form.save()
+            update_session_auth_hash(request, form.user)
         return render(request, "tour/change_password.html", {})
 
 
@@ -116,23 +211,17 @@ class InfoRetrieveRoomView(View):
     template_name = "tour/info_retrieve.html"
 
     def get(self, request, *args, **kwargs):
-        data = request.query_params
-        if data.get('pk'):
-            return redirect(Rooms, pk=data.get('pk'))
-        else:
-            qs = Rooms.objects.all()
-            return render(request, self.template_name, {
-                'model_name': 'Комнаты',
-                'form':
-            })
-        return render(request, self.template_name, {})
+        return render(request, self.template_name, {
+            'model_name': 'Номера',
+            "form": ModelInfoRetrieveRoomForm
+        })
 
     def post(self, request, *args, **kwargs):
-        data = request.data
-        if data.get('pk'):
+        data = request.POST
+        if data.get('id_s'):
             return render(request, self.template_name, {
-                'model_name': 'Комнаты',
-                "info": Rooms.objects.get(pk=data.get('pk')),
+                'model_name': 'Номера',
+                "info": Rooms.objects.get(pk=data.get('id_s')),
             })
         return render(request, self.template_name, {})
 
@@ -141,14 +230,17 @@ class InfoRetrieveToursView(View):
     template_name = "tour/info_retrieve.html"
 
     def get(self, request, *args, **kwargs):
-        data = request.query_params
-        if data.get('pk'):
-            return redirect(model, pk=data.get('pk'))
-        else:
-            qs = Tours.objects.all()
+        return render(request, self.template_name, {
+            'model_name': 'Туры',
+            "form": ModelInfoRetrieveTourForm
+        })
+
+    def post(self, request, *args, **kwargs):
+        data = request.POST
+        if data.get('id_s'):
             return render(request, self.template_name, {
                 'model_name': 'Туры',
-                "info": qs
+                "info": Tours.objects.get(pk=data.get('id_s')),
             })
         return render(request, self.template_name, {})
 
@@ -157,14 +249,17 @@ class InfoRetrieveTransferView(View):
     template_name = "tour/info_retrieve.html"
 
     def get(self, request, *args, **kwargs):
-        data = request.query_params
-        if data.get('pk'):
-            return redirect(model, pk=data.get('pk'))
-        else:
-            qs = Transfers.objects.all()
+        return render(request, self.template_name, {
+            'model_name': 'Трансферы',
+            "form": ModelInfoRetrieveTransferForm
+        })
+
+    def post(self, request, *args, **kwargs):
+        data = request.POST
+        if data.get('id_s'):
             return render(request, self.template_name, {
                 'model_name': 'Трансферы',
-                "info": qs
+                "info": Transfers.objects.get(pk=data.get('id_s')),
             })
         return render(request, self.template_name, {})
 
@@ -178,7 +273,7 @@ class RemoveStaffView(View):
 
 
 class OrderTransferView(CreateView):
-    model = Transfers
+    model = Transferorders
     fields = [
         'userid',
         'transfer',
@@ -195,11 +290,12 @@ class OrderTransferView(CreateView):
 
     def get_context_data(self, **kwargs: Any) -> Dict[str, Any]:
         context = super().get_context_data(**kwargs)
+        context['model_name'] = 'трансфера'
         return context
 
 
 class OrderTourView(CreateView):
-    model = Tours
+    model = Tourorders
     fields = [
         'userid',
         'tour',
@@ -214,11 +310,13 @@ class OrderTourView(CreateView):
     template_name = 'tour/order_tour.html'
 
     def get_context_data(self, **kwargs: Any) -> Dict[str, Any]:
-        return super().get_context_data(**kwargs)
+        context = super().get_context_data(**kwargs)
+        context['model_name'] = 'тура'
+        return context
 
 
 class OrderRoomView(CreateView):
-    model = Rooms
+    model = Roomorders
     fields = [
         'userid',
         'room',
@@ -233,7 +331,9 @@ class OrderRoomView(CreateView):
     template_name = 'tour/order_room.html'
 
     def get_context_data(self, **kwargs: Any) -> Dict[str, Any]:
-        return super().get_context_data(**kwargs)
+        context = super().get_context_data(**kwargs)
+        context['model_name'] = 'Номера'
+        return context
 
 
 class RetrieveUsersView(ListView):
@@ -241,7 +341,9 @@ class RetrieveUsersView(ListView):
     template_name = 'tour/retrieve_users.html'
 
     def get_context_data(self, **kwargs: Any) -> Dict[str, Any]:
-        return super().get_context_data(**kwargs)
+        context = super().get_context_data(**kwargs)
+        context['model_name'] = 'Пользователи'
+        return context
 
 
 class RetrieveUsersOrdersView(View):
@@ -249,18 +351,50 @@ class RetrieveUsersOrdersView(View):
     fields = []
     template_name = 'tour/retrieve_users_orders.html'
 
-    def get(self, request, pk, *args, **kwargs):
+    def get(self, request, *args, **kwargs):
         results = []
         models = [
             Transferorders,
             Tourorders,
             Roomorders,
         ]
+        user = request.user
+        results = {
+            'transferorders': [],
+            'tourorders': [],
+            'roomorders': [],
+        }
         for model_object in models:
-            qs = model_object.objects.filter(userid__pk=pk)
+            qs = model_object.objects.filter(userid__pk=user.pk)
             for obj in qs:
-                results.append(obj)
-        return results
+                results[model_object.__name__.lower()].append(obj)
+        return render(request, self.template_name, results)
+
+    def get_context_data(self, **kwargs: Any) -> Dict[str, Any]:
+        return super().get_context_data(**kwargs)
+
+
+class RetrievesOrdersView(View):
+    model = Users
+    fields = []
+    template_name = 'tour/retrieve_users_orders.html'
+
+    def get(self, request, *args, **kwargs):
+        models = [
+            Transferorders,
+            Tourorders,
+            Roomorders,
+        ]
+        results = {
+            'transferorders': [],
+            'tourorders': [],
+            'roomorders': [],
+        }
+        for model_object in models:
+            qs = model_object.objects.all()
+            for obj in qs:
+                results[model_object.__name__.lower()].append(obj)
+        return render(request, self.template_name, results)
 
     def get_context_data(self, **kwargs: Any) -> Dict[str, Any]:
         return super().get_context_data(**kwargs)
@@ -268,24 +402,26 @@ class RetrieveUsersOrdersView(View):
 
 def register(request):
     if request.user.is_authenticated:
-        return redirect('tourism:index')
+        return redirect('tourism:main')
     if request.method == 'POST':
         form = RegisterForm(request.POST)
         if form.is_valid():
             form.save()
-            new_user = authenticate(username=form.cleaned_data['username'],
-                                    password=form.cleaned_data['password1'],
-                                    )
+            new_user = authenticate(
+                username=form.cleaned_data['username'],
+                password=form.cleaned_data['password1'],
+            )
             login(request, new_user)
-            return redirect('tourism:index')
+            return redirect('tourism:main')
     context = {}
     context['title'] = 'Регистрация'
+    context['form'] = RegisterForm
     return render(request, 'tour/registration.html', context)
 
 
 def logout_view(request):
     logout(request)
-    return redirect('tourism:index')
+    return redirect('tourism:main')
 
 
 def login_view(request):
@@ -294,9 +430,10 @@ def login_view(request):
     if request.method == 'POST':
         form = UserLoginForm(data=request.POST)
         if form.is_valid():
-            new_user = authenticate(username=form.cleaned_data['username'],
-                                    password=form.cleaned_data['password'],
-                                    )
+            new_user = authenticate(
+                username=form.cleaned_data['username'],
+                password=form.cleaned_data['password'],
+            )
             login(request, new_user)
             return redirect('tourism:main')
         else:
@@ -317,6 +454,5 @@ def main(request):
     if request.user:
         user = request.user
         context['user'] = user
-
 
     return render(request, 'tour/main.html', context=context)

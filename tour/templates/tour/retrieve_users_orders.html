@@ -1,15 +1,108 @@
+{% extends 'base.html' %} {% block style %}
+<link href="https://fonts.googleapis.com/css2?family=Montserrat&display=swap" rel="stylesheet" />
+{% endblock %} {% block title %}Statistics{% endblock title %}
+{% block content %}
+<div class="intro"></div>
+<div class="container">
+    <h1>Заказы трансферов</h1>
+    <table class="table table-light">
+        <tbody>
+            <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Пользователь</th>
+                    <th scope="col">Название</th>
+                    <th scope="col">Старт</th>
+                    <th scope="col">Конец</th>
+                    <th scope="col">Места</th>
+                    <th scope="col">Цена</th>
+                    <th scope="col">Дата заказа</th>
+                    <th scope="col">Статус</th>
+                    <th scope="col">Мэнеджер</th>
+                </tr>
+            </thead>
+            {% for transfer_order in transferorders %}
+            <tr>
+                <td>{{ transfer_order.order_number }}</td>
+                <td>{{ transfer_order.userid.username }}</td>
+                <td>{{ transfer_order.transfer.title }}</td>
+                <td>{{ transfer_order.startdate }}</td>
+                <td>{{ transfer_order.enddate }}</td>
+                <td>{{ transfer_order.places }}</td>
+                <td>{{ transfer_order.prices }}</td>
+                <td>{{ transfer_order.orderdate }}</td>
+                <td>{{ transfer_order.status }}</td>
+                <td>{{ transfer_order.manager.user.username }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <h1>Заказы туров</h1>
+    <table class="table table-light">
+        <tbody>
+            <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Пользователь</th>
+                    <th scope="col">Название</th>
+                    <th scope="col">Старт</th>
+                    <th scope="col">Конец</th>
+                    <th scope="col">Места</th>
+                    <th scope="col">Цена</th>
+                    <th scope="col">Дата заказа</th>
+                    <th scope="col">Статус</th>
+                    <th scope="col">Мэнеджер</th>
+                </tr>
+            </thead>
+            {% for tour_order in tourorders %}
+            <tr>
+                <td>{{ tour_order.order_number }}</td>
+                <td>{{ tour_order.userid.username }}</td>
+                <td>{{ tour_order.tour.title }}</td>
+                <td>{{ tour_order.startdate }}</td>
+                <td>{{ tour_order.enddate }}</td>
+                <td>{{ tour_order.places }}</td>
+                <td>{{ tour_order.prices }}</td>
+                <td>{{ tour_order.orderdate }}</td>
+                <td>{{ tour_order.status }}</td>
+                <td>{{ tour_order.manager.user.username }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <h1>Заказы комнат</h1>
+    <table class="table table-light">
+        <tbody>
+            <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Пользователь</th>
+                    <th scope="col">Название</th>
+                    <th scope="col">Старт</th>
+                    <th scope="col">Конец</th>
+                    <th scope="col">Места</th>
+                    <th scope="col">Цена</th>
+                    <th scope="col">Дата заказа</th>
+                    <th scope="col">Статус</th>
+                    <th scope="col">Мэнеджер</th>
+                </tr>
+            </thead>
+            {% for room_order in roomorders %}
+            <tr>
+                <td>{{ room_order.order_number }}</td>
+                <td>{{ room_order.userid.username }}</td>
+                <td>{{ room_order.tour.title }}</td>
+                <td>{{ room_order.startdate }}</td>
+                <td>{{ room_order.enddate }}</td>
+                <td>{{ room_order.places }}</td>
+                <td>{{ room_order.prices }}</td>
+                <td>{{ room_order.orderdate }}</td>
+                <td>{{ room_order.status }}</td>
+                <td>{{ room_order.manager.user.username }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
 
-    {% extends 'basics.html' %}
-
-    {% block style %}
-    <link rel = "stylesheet" href = "{{ url_for('static',filename='css/Delete_Service.css') }}">
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat&display=swap" rel="stylesheet">
-    {% endblock %}
-{% block title %}Statistics{% endblock title %}
-{% block main_content %}
-    <div class = "intro">
-        <h1>���������� ���������</h1>
-<div class = "container">
 </div>
-</div>    
-{% endblock main_content %}
+{% endblock content %}

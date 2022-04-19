@@ -1,15 +1,14 @@
-
-    {% extends 'basics.html' %}
-
-    {% block style %}
-    <link rel = "stylesheet" href = "{{ url_for('static',filename='css/Delete_Service.css') }}">
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat&display=swap" rel="stylesheet">
-    {% endblock %}
-{% block title %}Statistics{% endblock title %}
-{% block main_content %}
-    <div class = "intro">
-        <h1>Посмотреть стоимость</h1>
-<div class = "container">
+{% extends 'base.html' %} {% block style %}
+<link href="https://fonts.googleapis.com/css2?family=Montserrat&display=swap" rel="stylesheet" />
+{% endblock %} {% block title %}Order transfer{% endblock title %} {% block content
+%}
+<div class="intro">
+    <h1>Р—Р°РєР°Р· {{model_name}}</h1>
+    <div class="container">
+        <form method="post">
+            {{form.as_p}}
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+    </div>
 </div>
-</div>    
-{% endblock main_content %}
+{% endblock content %}

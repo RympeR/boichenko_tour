@@ -1,3 +1,4 @@
+from tkinter.tix import Form
 from django import forms
 from .models import Users, Rooms, Tours, Transfers, Transferorders, Tourorders, Roomorders
 from django.contrib.auth.forms import UserCreationForm
@@ -40,28 +41,85 @@ class UserLoginForm(AuthenticationForm):
         attrs={'required': True, 'placeholder': 'Пароль:', 'id': 'password'}))
 
 
-class ModelInfoRetrieveRoomForm(AuthenticationForm):
-    id_s = forms.ChoiceField(label='ID', required=True, choices=Rooms.objects.all().values_list('pk'),)
+
+class ModelInfoRetrieveRoomForm(forms.Form):
+    id_s = forms.ModelChoiceField(
+        label='ID', required=True, queryset=Rooms.objects.all(),)
 
 
-class ModelInfoRetrieveTourForm(AuthenticationForm):
-    id_s = forms.ChoiceField(label='ID', required=True, choices=Tours.objects.all().values_list('pk'), )
+class ModelsRetrieveForm(forms.Form):
+    models = forms.ChoiceField(
+        label='Раздел', required=True, choices=(
+            ('room', 'Комната'),
+            ('transfer', 'Трансфер'),
+            ('tour', 'Тур'),
+        ))
 
 
-class ModelInfoRetrieveTransferForm(AuthenticationForm):
-    id_s = forms.ChoiceField(label='ID', required=True, choices=Transfers.objects.all().values_list('pk'), )
+class ModelInfoRetrieveTourForm(forms.Form):
+    id_s = forms.ModelChoiceField(
+        label='ID', required=True, queryset=Tours.objects.all())
 
 
-class ModelInfoRetrieveRoomOrderForm(AuthenticationForm):
-    id_s = forms.ChoiceField(label='ID', required=True, choices=Roomorders.objects.all().values_list('pk'),)
-    new_status = forms.ChoiceField(label='Status', required=True, choices=Roomorders.objects.all().values_list('pk'), )
+class ModelInfoRetrieveTransferForm(forms.Form):
+    id_s = forms.ModelChoiceField(
+        label='ID', required=True, queryset=Transfers.objects.all())
 
 
-class ModelInfoRetrieveTourOrderForm(AuthenticationForm):
-    id_s = forms.ChoiceField(label='ID', required=True, choices=Tourorders.objects.all().values_list('pk'), )
-    new_status = forms.ChoiceField(label='Status', required=True, choices=Tourorders.objects.all().values_list('pk'), )
+class ModelInfoRetrieveRoomOrderForm(forms.Form):
+    id_s = forms.ModelChoiceField(
+        label='ID', required=True, queryset=Roomorders.objects.all())
+    new_status = forms.ChoiceField(
+        label='Status', required=True, choices=(
+            ('New', 'New',), ('Conform', 'Conform'), ('Ready', 'Ready'),), )
 
 
-class ModelInfoRetrieveTransferOrderForm(AuthenticationForm):
-    id_s = forms.ChoiceField(label='ID', required=True, choices=Transferorders.objects.all().values_list('pk'), )
-    new_status = forms.ChoiceField(label='Status', required=True, choices=Transferorders.objects.all().values_list('pk'), )
+class ModelInfoRetrieveTourOrderForm(forms.Form):
+    id_s = forms.ModelChoiceField(
+        label='ID', required=True, queryset=Tourorders.objects.all())
+    new_status = forms.ChoiceField(
+        label='Status', required=True, choices=(
+            ('New', 'New',), ('Conform', 'Conform'), ('Ready', 'Ready'),), )
+
+
+class ModelInfoRetrieveTransferOrderForm(forms.Form):
+    id_s = forms.ModelChoiceField(
+        label='ID', required=True, queryset=Transferorders.objects.all())
+    new_status = forms.ChoiceField(label='Status', required=True, choices=(
+        ('New', 'New',), ('Conform', 'Conform'), ('Ready', 'Ready'),), )
+
+
+class ModelInfoRetrievePolicyRoomOrderForm(forms.Form):
+    id_s = forms.ModelChoiceField(
+        label='ID', required=True, queryset=Roomorders.objects.all())
+    policy = forms.CharField(label='Policy', required=True)
+
+
+class ModelInfoRetrievePolicyTourOrderForm(forms.Form):
+    id_s = forms.ModelChoiceField(
+        label='ID', required=True, queryset=Tourorders.objects.all())
+    policy = forms.CharField(label='Policy', required=True)
+
+
+class ModelInfoRetrievePolicyTransferOrderForm(forms.Form):
+    id_s = forms.ModelChoiceField(
+        label='ID', required=True, queryset=Transferorders.objects.all())
+    policy = forms.CharField(label='Policy', required=True)
+
+
+class ModelInfoRetrievePriceRoomOrderForm(forms.Form):
+    id_s = forms.ModelChoiceField(
+        label='ID', required=True, queryset=Roomorders.objects.all())
+    price = forms.IntegerField(label='Цена', required=True)
+
+
+class ModelInfoRetrievePriceTourOrderForm(forms.Form):
+    id_s = forms.ModelChoiceField(
+        label='ID', required=True, queryset=Tourorders.objects.all())
+    price = forms.IntegerField(label='Цена', required=True)
+
+
+class ModelInfoRetrievePriceTransferOrderForm(forms.Form):
+    id_s = forms.ModelChoiceField(
+        label='ID', required=True, queryset=Transferorders.objects.all())
+    price = forms.IntegerField(label='Цена', required=True)

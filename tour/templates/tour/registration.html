@@ -4,27 +4,29 @@
 <div class="login-section padding-top padding-bottom">
   <div class="container">
     <div class="account-wrapper">
-      <h3 class="title">Вход</h3>
+      <h3 class="title">Зарегестрироваться</h3>
 
       <form
         method="POST"
         class="account-form"
-        action='{% url "tourism:login" %}'
+        action='{% url "tourism:register" %}'
       >
         {% csrf_token %}
+        <div class="form-group">{{ form.fio }}</div>
         <div class="form-group">{{ form.username }}</div>
+        <div class="form-group">{{ form.email }}</div>
         <div class="form-group">{{ form.password }}</div>
+        <div class="form-group">{{ form.password2 }}</div>
         <div class="form-group">
           {% for message in messages %}
           <p>{{ message }}</p>
           {% endfor %}
-          <button class="d-block custom-button"><span>Войти</span></button>
+          <button type="submit" class="btn btn-primary">Зарегестрироваться</button>
         </div>
       </form>
       <div class="account-bottom">
         <span class="d-block cate pt-10"
-          >Нету аккаунта?
-          <a href="{% url 'tourism:register' %}">Зарегестрироваться</a></span
+          >Есть аккаунт? <a href="{% url 'tourism:login' %}">Войти</a></span
         >
       </div>
     </div>

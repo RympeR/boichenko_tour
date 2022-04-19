@@ -1,17 +1,58 @@
+{% extends 'base.html' %}
 
-    {% extends 'basics.html' %}
-
-    {% block style %}
-    <link rel = "stylesheet" href = "{{ url_for('static',filename='css/Delete_Service.css') }}">
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat&display=swap" rel="stylesheet">
-    {% endblock %}
+{% block style %}
+<link href="https://fonts.googleapis.com/css2?family=Montserrat&display=swap" rel="stylesheet">
+{% endblock %}
 {% block title %}{{ model_name }}{% endblock title %}
-{% block main_content %}
-    <div class = "intro">
-        {% if form %}
-            <h1>���������� ����������</h1>
-            {{ form.as_p }}
-        {%  endif %}
+{% block content %}
+<div class="intro">
+    {% if form %}
+    <h1>Выбор {{ model_name }}</h1>
+    <form action="" method="post">
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+    {% endif %}
+</div>
 
-    <div class = "container">
-{% endblock main_content %}
+<div class="container">
+    {% if info %}
+    {% if model_name == 'Туры' %}
+    <div class="info">
+        <h2>Информация о туре</h2>
+        <p>Название: {{ info.title }}</p>
+        <p>Описание: {{ info.description }}</p>
+        <p>Цена: {{ info.price }}</p>
+        <p>Город: {{ info.city }}</p>
+        <p>Рейтинг: {{ info.rating }}</p>
+    </div>
+    {% elif model_name == 'Трансферы' %}
+    <div class="info">
+        <h2>Информация о трансфере</h2>
+        <p>Название: {{ info.title }}</p>
+        <p>Описание: {{ info.description }}</p>
+        <p>Места: {{ info.places }}</p>
+        <p>Цена: {{ info.price }}</p>
+        <p>Город: {{ info.city }}</p>
+        <p>Рейтинг: {{ info.rating }}</p>
+    </div>
+    {% elif model_name == 'Номера' %}
+    <div class="info">
+        <h2>Информация о номере</h2>
+        <p>Название: {{ info.title }}</p>
+        <p>Описание: {{ info.description }}</p>
+        <p>Кол-во мест: {{ info.places }}</p>
+        <p>Цена: {{ info.price }}</p>
+        <p>Город: {{ info.city }}</p>
+        <p>Рейтинг: {{ info.rating }}</p>
+        <p>Кол-во комнат: {{ info.quantity }}</p>
+        <h2>Информация об отеле</h2>
+        <p>Название: {{ info.hotel.title }}</p>
+        <p>Описание: {{ info.hotel.description }}</p>
+        <p>Город: {{ info.hotel.address.city }}</p>
+        <p>Рейтинг: {{ info.hotel.rating }}</p>
+    </div>
+    {% endif %}
+    {% endif %}
+</div>
+{% endblock content  %}

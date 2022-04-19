@@ -60,7 +60,7 @@ p {
 }
 
 label {
-    color: white;
+    color: black;
 }
 
 .footer {
@@ -71,11 +71,20 @@ label {
     text-align: center;
 }
 
-.background-form{
+.background-form {
     background-color: white;
     max-width: 30%;
 }
 
-.black-text{
+.black-text {
     color: black;
+}
+
+form {
+    background-color: #d4d7cc;
+    justify-content: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 90%;
 }

@@ -50,7 +50,7 @@ class EmployeesAdmin(admin.ModelAdmin):
     list_display_links = (
         'pk',
     )
-    search_fields = 'user__first_name', 'user__last_name'
+    search_fields = 'user__first_name', 'user__username'
     ordering = '-user__dateofbirthday',
     list_filter = (
         ('user__dateofbirthday', DateFieldListFilter),
@@ -187,9 +187,6 @@ class TransfersAdmin(admin.ModelAdmin):
     ordering = '-rating',
     search_fields = 'city__name', 'city__country', 'title'
     list_filter = (
-        ('startdate', DateFieldListFilter),
-        ('enddate', DateFieldListFilter),
-        ('orderdate', DateFieldListFilter),
     )
 
 

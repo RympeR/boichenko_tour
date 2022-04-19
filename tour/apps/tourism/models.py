@@ -55,7 +55,7 @@ class Users(AbstractUser):
         return reverse('user-detail', kwargs={'pk': self.pk})
 
     class Meta:
-        verbose_name = 'Пользователь'        
+        verbose_name = 'Пользователь'
 
 
 class Address(models.Model):
@@ -63,7 +63,7 @@ class Address(models.Model):
     name = models.CharField(max_length=255)
 
     def __str__(self):
-        return str(self.city) + ' ' + self.name        
+        return str(self.city) + ' ' + self.name
 
 
 class City(models.Model):
@@ -71,7 +71,7 @@ class City(models.Model):
     name = models.CharField(max_length=255)
 
     def __str__(self):
-        return self.country + ' ' + self.name        
+        return self.country + ' ' + self.name
 
 
 class Employees(models.Model):
@@ -82,7 +82,7 @@ class Employees(models.Model):
     employmentdate = models.DateField(auto_now_add=True)
 
     def __str__(self):
-        return self.user.username + ' ' + self.user.lastname        
+        return self.user.username
 
 
 class Hotels(models.Model):
@@ -96,7 +96,7 @@ class Hotels(models.Model):
         return reverse('hotel-detail', kwargs={'pk': self.pk})
 
     def __str__(self):
-        return self.title        
+        return self.title
 
 
 class Roomorders(models.Model):
@@ -114,10 +114,10 @@ class Roomorders(models.Model):
         Employees, models.DO_NOTHING, db_column='manager')
 
     def get_absolute_url(self):
-        return reverse('room-order', kwargs={'pk': self.pk})
+        return reverse('tourism:retrieve_users_orders', kwargs={'pk': self.userid.pk})
 
     def __str__(self):
-        return f'{self.ordernumber} {self.userid}'        
+        return f'{self.ordernumber} {self.userid}'
 
 
 class Rooms(models.Model):
@@ -133,7 +133,7 @@ class Rooms(models.Model):
         return f'{self.title} {self.hotel}'
 
     def get_absolute_url(self):
-        return reverse('room-info', kwargs={'pk': self.pk})        
+        return reverse('room-info', kwargs={'pk': self.pk})
 
 
 class Roomsfeedback(models.Model):
@@ -145,7 +145,7 @@ class Roomsfeedback(models.Model):
     date = models.DateField()
 
     def __str__(self):
-        return f'{self.room} {self.title}'        
+        return f'{self.room} {self.title}'
 
 
 class Tourfeedback(models.Model):
@@ -157,7 +157,7 @@ class Tourfeedback(models.Model):
     date = models.DateField()
 
     def __str__(self):
-        return f'{self.tour} {self.title}'        
+        return f'{self.tour} {self.title}'
 
 
 class Tourorders(models.Model):
@@ -175,10 +175,10 @@ class Tourorders(models.Model):
         Employees, models.DO_NOTHING, db_column='manager')
 
     def get_absolute_url(self):
-        return reverse('tour-order', kwargs={'pk': self.pk})
+        return reverse('tourism:retrieve_users_orders', kwargs={'pk': self.userid.pk})
 
     def __str__(self):
-        return f'{self.ordernumber} {self.userid}'        
+        return f'{self.ordernumber} {self.userid}'
 
 
 class Tours(models.Model):
@@ -187,9 +187,6 @@ class Tours(models.Model):
     price = models.IntegerField()
     city = models.ForeignKey(City, models.DO_NOTHING, db_column='city')
     rating = models.IntegerField()
-
-    def get_absolute_url(self):
-        return reverse('tour-info', kwargs={'pk': self.pk})
 
     def __str__(self):
         return f'{self.title}'
@@ -205,7 +202,7 @@ class Transferfeedback(models.Model):
     date = models.DateField()
 
     def __str__(self):
-        return f'{self.transfer} {self.title}'        
+        return f'{self.transfer} {self.title}'
 
 
 class Transferorders(models.Model):
@@ -224,10 +221,10 @@ class Transferorders(models.Model):
         Employees, models.DO_NOTHING, db_column='manager')
 
     def get_absolute_url(self):
-        return reverse('transfer-order', kwargs={'pk': self.pk})
+        return reverse('tourism:retrieve_users_orders', kwargs={'pk': self.userid.pk})
 
     def __str__(self):
-        return f'{self.ordernumber} {self.userid}'        
+        return f'{self.ordernumber} {self.userid}'
 
 
 class Transfers(models.Model):
@@ -240,6 +237,3 @@ class Transfers(models.Model):
 
     def __str__(self):
         return f'{self.title} {self.price}'
-
-    def get_absolute_url(self):
-        return reverse('transfer-info', kwargs={'pk': self.pk})        
