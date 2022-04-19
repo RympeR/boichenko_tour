@@ -7,7 +7,7 @@ from django.contrib.auth.forms import PasswordChangeForm
 from django.shortcuts import redirect, render
 from django.views import View
 from django.views.generic import CreateView, ListView
-
+from django.contrib.auth.decorators import login_required
 from .forms import (ModelInfoRetrievePolicyRoomOrderForm,
                     ModelInfoRetrievePolicyTourOrderForm,
                     ModelInfoRetrievePolicyTransferOrderForm,
@@ -18,11 +18,12 @@ from .forms import (ModelInfoRetrievePolicyRoomOrderForm,
                     ModelInfoRetrieveTourForm, ModelInfoRetrieveTourOrderForm,
                     ModelInfoRetrieveTransferForm,
                     ModelInfoRetrieveTransferOrderForm, ModelsRetrieveForm,
-                    RegisterForm, UserLoginForm)
+                    RegisterForm, UserLoginForm,
+                    LocalPasswordChangeForm)
 from .models import (Roomorders, Rooms, Roomsfeedback, Tourfeedback,
                      Tourorders, Tours, Transferfeedback, Transferorders,
                      Transfers, Users)
-
+from django.http import HttpResponseRedirect
 
 class StatusChangeView(View):
     template_name = "tour/status_change.html"
@@ -191,11 +192,10 @@ class StatusRetrieveTransferView(View):
             'obj_info': Transferorders.objects.get(pk=pk),
         })
 
-
 class ChangePasswordView(View):
     def get(self, request, *args, **kwargs):
         return render(request, "tour/change_password.html", {
-            'form': PasswordChangeForm
+            'form': LocalPasswordChangeForm
         })
 
     def post(self, request, *args, **kwargs):
@@ -203,8 +203,14 @@ class ChangePasswordView(View):
 
         if form.is_valid():
             form.save()
+            print("valid")
+            print(form.cleaned_data)
             update_session_auth_hash(request, form.user)
-        return render(request, "tour/change_password.html", {})
+        else:
+            print(form.errors)
+        return render(request, "tour/change_password.html", {
+            'form': LocalPasswordChangeForm
+        })
 
 
 class InfoRetrieveRoomView(View):
@@ -314,6 +320,15 @@ class OrderTourView(CreateView):
         context['model_name'] = 'тура'
         return context
 
+    def form_valid(self, form):
+        try:
+            self.object = form.save()
+            return HttpResponseRedirect(self.get_success_url())
+        except Exception as e:
+            print(e)
+            return HttpResponseRedirect('/order-tour/')
+        # do something with self.object
+        # remember the import: from django.http import HttpResponseRedirect
 
 class OrderRoomView(CreateView):
     model = Roomorders

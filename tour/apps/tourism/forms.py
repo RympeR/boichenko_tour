@@ -47,6 +47,15 @@ class ModelInfoRetrieveRoomForm(forms.Form):
         label='ID', required=True, queryset=Rooms.objects.all(),)
 
 
+class LocalPasswordChangeForm(forms.Form):
+    old_password = forms.CharField(label='Старый пароль', required=True, widget=forms.PasswordInput(
+        attrs={'required': True, 'placeholder': 'Старый пароль:', 'id': 'password'}))
+    new_password1 = forms.CharField(label='Новый пароль', required=True,  widget=forms.PasswordInput(
+        attrs={'required': True, 'placeholder': 'Новый пароль:', 'id': 'confirm_password'}))
+    new_password2 = forms.CharField(label='Подтвердите пароль', required=True,  widget=forms.PasswordInput(
+        attrs={'required': True, 'placeholder': 'Подтвердите пароль:', 'id': 'confirm_password'}))
+
+
 class ModelsRetrieveForm(forms.Form):
     models = forms.ChoiceField(
         label='Раздел', required=True, choices=(

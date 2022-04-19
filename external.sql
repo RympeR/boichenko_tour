@@ -51,17 +51,19 @@ GRANT CONNECT ON DATABASE "Tourism2" to tourism_guest;
 CREATE OR REPLACE FUNCTION verify_free_places() RETURNS TRIGGER AS $$
 DECLARE
     amount int;
-    places int;
+    places_var int;
 BEGIN
 
-    SELECT DISTINCT count(*) into places from tourism_rooms where id=New.room;
-    SELECT DISTINCT count(*) into amount from tourism_roomorders
+    SELECT places into places_var from tourism_rooms where id=New.room;
+    SELECT DISTINCT sum(tourism_roomorders.places) into amount from tourism_roomorders
         join tourism_rooms on tourism_roomorders.room = tourism_rooms.id
         where 
             NEW.enddate > now()::date and room=NEW.room;
+    
+    RAISE NOTICE '%', amount;
+    RAISE NOTICE '%', places_var;
 
-
-    IF amount > places  THEN
+    IF amount + New.places > places_var  THEN
         RAISE NOTICE 'Amount of places is less than amount of orders';
         RETURN OLD;
     END IF;
@@ -75,20 +77,21 @@ CREATE TRIGGER verify_free_places_trigger BEFORE INSERT ON tourism_roomorders
     FOR EACH ROW EXECUTE PROCEDURE verify_free_places();
 
 
+
 CREATE OR REPLACE FUNCTION verify_free_places_tourorders() RETURNS TRIGGER AS $$
 DECLARE
     amount int;
-    places int;
+    places_var int;
 BEGIN
 
-    SELECT DISTINCT count(*) into places from tourism_tours where id=New.tour;
-    SELECT DISTINCT count(*) into amount from tourism_tourorders
+    SELECT places into places_var from tourism_tours where id=New.tour;
+    SELECT sum(tourism_tourorders.places) into amount from tourism_tourorders
         join tourism_tours on tourism_tours.id = tourism_tourorders.tour
         where 
             NEW.enddate > now()::date and tour=NEW.tour;
-
-
-    IF amount > places  THEN
+	RAISE NOTICE '%', amount;
+    RAISE NOTICE '%', places_var;
+    IF amount + New.places > places_var  THEN
         RAISE NOTICE 'Amount of places is less than amount of orders';
         RETURN OLD;
     END IF;
@@ -102,20 +105,22 @@ CREATE TRIGGER verify_free_places_tourorders_trigger BEFORE INSERT ON tourism_to
     FOR EACH ROW EXECUTE PROCEDURE verify_free_places_tourorders();
 
 
+
 CREATE OR REPLACE FUNCTION verify_free_places_transferorders() RETURNS TRIGGER AS $$
 DECLARE
     amount int;
-    places int;
+    places_var int;
 BEGIN
 
-    SELECT DISTINCT count(*) into places from tourism_trasnfers where id=New.transfer;
-    SELECT DISTINCT count(*) into amount from tourism_transferorders
+    SELECT places into places_var from tourism_trasnfers where id=New.transfer;
+    SELECT sum(tourism_transferorders.places) into amount from tourism_transferorders
         join tourism_trasnfers on tourism_trasnfers.id = tourism_transferorders.transfer
         where 
             NEW.enddate > now()::date and tourism_transferorders.transfer=NEW.transfer;
 
-
-    IF amount > places  THEN
+    RAISE NOTICE '%', amount;
+    RAISE NOTICE '%', places_var;
+    IF amount + New.places > places_var  THEN
         RAISE NOTICE 'Amount of places is less than amount of orders';
         RETURN OLD;
     END IF;

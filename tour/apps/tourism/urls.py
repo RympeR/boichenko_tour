@@ -1,5 +1,6 @@
 from django.urls import path
 from .views import *
+from django.contrib.auth import views as auth_views
 
 app_name = 'tourism'
 
@@ -31,6 +32,7 @@ urlpatterns = [
     path('retrieve-users-orders/', RetrieveUsersOrdersView.as_view(),
          name='retrieve_users_orders'),
     path('register/', register, name='register'),
+#     path('change-password/', auth_views.PasswordChangeView.as_view()),
     path('change-password/', ChangePasswordView.as_view(), name='change_password'),
     path('login/', login_view, name='login'),
     path('logout/', logout_view, name='logout'),

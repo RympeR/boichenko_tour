@@ -185,6 +185,7 @@ class Tours(models.Model):
     title = models.CharField(max_length=255)
     description = models.CharField(max_length=255)
     price = models.IntegerField()
+    places = models.IntegerField()
     city = models.ForeignKey(City, models.DO_NOTHING, db_column='city')
     rating = models.IntegerField()
 
