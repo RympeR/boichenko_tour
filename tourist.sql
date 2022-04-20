@@ -11,7 +11,7 @@ CREATE DATABASE "Tourist2"
 	TABLESPACE = pg_default
 	CONNECTION LIMIT = -1;
 
-CREATE DOMAIN OrderStatus VARCHAR CHECK(VALUE IN('New', 'Conform', 'Ready'));
+CREATE DOMAIN OrderStatus VARCHAR CHECK(VALUE IN('New', 'Confirm', 'Ready'));
 
 CREATE TABLE Users
 (

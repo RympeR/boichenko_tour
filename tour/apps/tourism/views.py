@@ -25,6 +25,7 @@ from .models import (Roomorders, Rooms, Roomsfeedback, Tourfeedback,
                      Transfers, Users)
 from django.http import HttpResponseRedirect
 
+
 class StatusChangeView(View):
     template_name = "tour/status_change.html"
 
@@ -97,7 +98,7 @@ class PolicyChangeView(View):
 
             if model:
                 model.objects.filter(pk=data.get("id_s")).update(
-                    status=data.get("policy"))
+                    insurancepolicy=data.get("policy"))
                 return render(request, self.template_name, {
                     'form': ModelsRetrieveForm
                 })
@@ -191,6 +192,7 @@ class StatusRetrieveTransferView(View):
             "status": Transferorders.objects.filter(pk=pk).values("status")[0]["status"],
             'obj_info': Transferorders.objects.get(pk=pk),
         })
+
 
 class ChangePasswordView(View):
     def get(self, request, *args, **kwargs):
@@ -286,8 +288,6 @@ class OrderTransferView(CreateView):
         'startdate',
         'enddate',
         'places',
-        'prices',
-        'orderdate',
         'insurancepolicy',
         'status',
         'manager',
@@ -299,16 +299,23 @@ class OrderTransferView(CreateView):
         context['model_name'] = 'трансфера'
         return context
 
+    def form_valid(self, form):
+        try:
+            self.object = form.save()
+            return HttpResponseRedirect(self.get_success_url())
+        except Exception as e:
+            print(e)
+            return HttpResponseRedirect('/order-transfer/')
+
 
 class OrderTourView(CreateView):
     model = Tourorders
     fields = [
         'userid',
         'tour',
+        'startdate',
         'enddate',
         'places',
-        'prices',
-        'orderdate',
         'insurancepolicy',
         'status',
         'manager',
@@ -330,6 +337,7 @@ class OrderTourView(CreateView):
         # do something with self.object
         # remember the import: from django.http import HttpResponseRedirect
 
+
 class OrderRoomView(CreateView):
     model = Roomorders
     fields = [
@@ -338,8 +346,7 @@ class OrderRoomView(CreateView):
         'startdate',
         'enddate',
         'places',
-        'price',
-        'insuarancepolicy',
+        'insurancepolicy',
         'status',
         'manager',
     ]
@@ -349,6 +356,14 @@ class OrderRoomView(CreateView):
         context = super().get_context_data(**kwargs)
         context['model_name'] = 'Номера'
         return context
+
+    def form_valid(self, form):
+        try:
+            self.object = form.save()
+            return HttpResponseRedirect(self.get_success_url())
+        except Exception as e:
+            print(e)
+            return HttpResponseRedirect('/order-room/')
 
 
 class RetrieveUsersView(ListView):
@@ -428,6 +443,8 @@ def register(request):
             )
             login(request, new_user)
             return redirect('tourism:main')
+        else:
+            print(form.errors)
     context = {}
     context['title'] = 'Регистрация'
     context['form'] = RegisterForm
@@ -471,3 +488,89 @@ def main(request):
         context['user'] = user
 
     return render(request, 'tour/main.html', context=context)
+
+
+class OrderClientTransferView(CreateView):
+    model = Transferorders
+    fields = [
+        'transfer',
+        'startdate',
+        'enddate',
+        'places',
+        'insurancepolicy',
+        'manager',
+    ]
+    template_name = "tour/order_transfer.html"
+
+    def get_context_data(self, **kwargs: Any) -> Dict[str, Any]:
+        context = super().get_context_data(**kwargs)
+        context['model_name'] = 'трансфера'
+        return context
+
+    def form_valid(self, form):
+        form.instance.userid = self.request.user
+        form.instance.status = 'New'
+        try:
+            self.object = form.save()
+            return HttpResponseRedirect(self.get_success_url())
+        except Exception as e:
+            print(e)
+            return HttpResponseRedirect('/order-transfer-client/')
+
+
+class OrderClientTourView(CreateView):
+    model = Tourorders
+    fields = [
+        'tour',
+        'startdate',
+        'enddate',
+        'places',
+        'insurancepolicy',
+        'manager',
+    ]
+    template_name = 'tour/order_tour.html'
+
+    def get_context_data(self, **kwargs: Any) -> Dict[str, Any]:
+        context = super().get_context_data(**kwargs)
+        context['model_name'] = 'тура'
+        return context
+
+    def form_valid(self, form):
+        form.instance.userid = self.request.user
+        form.instance.status = 'New'
+        try:
+            self.object = form.save()
+            return HttpResponseRedirect(self.get_success_url())
+        except Exception as e:
+            print(e)
+            return HttpResponseRedirect('/order-tour-client/')
+        # do something with self.object
+        # remember the import: from django.http import HttpResponseRedirect
+
+
+class OrderClientRoomView(CreateView):
+    model = Roomorders
+    fields = [
+        'room',
+        'startdate',
+        'enddate',
+        'places',
+        'insurancepolicy',
+        'manager',
+    ]
+    template_name = 'tour/order_room.html'
+
+    def get_context_data(self, **kwargs: Any) -> Dict[str, Any]:
+        context = super().get_context_data(**kwargs)
+        context['model_name'] = 'Номера'
+        return context
+
+    def form_valid(self, form):
+        form.instance.userid = self.request.user
+        form.instance.status = 'New'
+        try:
+            self.object = form.save()
+            return HttpResponseRedirect(self.get_success_url())
+        except Exception as e:
+            print(e)
+            return HttpResponseRedirect('/order-room-client/')

@@ -12,15 +12,7 @@
         action='{% url "tourism:register" %}'
       >
         {% csrf_token %}
-        <div class="form-group">{{ form.fio }}</div>
-        <div class="form-group">{{ form.username }}</div>
-        <div class="form-group">{{ form.email }}</div>
-        <div class="form-group">{{ form.password }}</div>
-        <div class="form-group">{{ form.password2 }}</div>
-        <div class="form-group">
-          {% for message in messages %}
-          <p>{{ message }}</p>
-          {% endfor %}
+        {{ form.as_p }}
           <button type="submit" class="btn btn-primary">Зарегестрироваться</button>
         </div>
       </form>

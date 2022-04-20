@@ -21,7 +21,6 @@
       </li>
       <li class="nav-item">
         {% if user.is_authenticated %}
-        <a class="nav-link" href="{% url 'tourism:login' %}">Профиль</a>
         <a class="nav-link" href="{% url 'tourism:logout' %}">Выход</a>
         {% else %}
         <a class="nav-link" href="{% url 'tourism:login' %}">Вход</a>
@@ -61,14 +60,23 @@
           >Просмотр заказов</a
         >
         {% else %}
+        <a class="nav-link" href="{% url 'tourism:info_retrieve_tour' %}"
+          >Выборка тура</a
+        >
+        <a class="nav-link" href="{% url 'tourism:info_retrieve_room' %}"
+          >Выборка номера</a
+        >
+        <a class="nav-link" href="{% url 'tourism:info_retrieve_transfer' %}"
+          >Выборка трансфера</a
+        >
         <a class="nav-link" href="{% url 'tourism:retrieve_users_orders' %}"
           >Просмотр заказов</a
         >
-        <a class="nav-link" href="{% url 'tourism:order_tour' %}">Заказ тура</a>
-        <a class="nav-link" href="{% url 'tourism:order_room' %}"
+        <a class="nav-link" href="{% url 'tourism:order_tour_client' %}">Заказ тура</a>
+        <a class="nav-link" href="{% url 'tourism:order_room_client' %}"
           >Заказ номера</a
         >
-        <a class="nav-link" href="{% url 'tourism:order_transfer' %}"
+        <a class="nav-link" href="{% url 'tourism:order_transfer_client' %}"
           >Заказ трансфера</a
         >
         <a class="nav-link" href="{% url 'tourism:change_password' %}"

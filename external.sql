@@ -112,9 +112,9 @@ DECLARE
     places_var int;
 BEGIN
 
-    SELECT places into places_var from tourism_trasnfers where id=New.transfer;
+    SELECT places into places_var from tourism_transfers where id=New.transfer;
     SELECT sum(tourism_transferorders.places) into amount from tourism_transferorders
-        join tourism_trasnfers on tourism_trasnfers.id = tourism_transferorders.transfer
+        join tourism_transfers on tourism_transfers.id = tourism_transferorders.transfer
         where 
             NEW.enddate > now()::date and tourism_transferorders.transfer=NEW.transfer;
 

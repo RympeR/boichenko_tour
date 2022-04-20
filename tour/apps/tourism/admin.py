@@ -90,40 +90,10 @@ class RoomsAdmin(admin.ModelAdmin):
     search_fields = 'title', 'hotel__title'
 
 
-@admin.register(Roomsfeedback)
-class RoomsfeedbackAdmin(admin.ModelAdmin):
-    list_display = (
-        'pk', 'title', 'room', 'rating'
-    )
-    list_display_links = (
-        'pk',
-    )
-    ordering = '-rating',
-    search_fields = 'title', 'room__title'
-    list_filter = (
-        ('date', DateFieldListFilter),
-    )
-
-
-@admin.register(Tourfeedback)
-class TourfeedbackAdmin(admin.ModelAdmin):
-    list_display = (
-        'pk', 'title', 'tour', 'rating'
-    )
-    list_display_links = (
-        'pk',
-    )
-    ordering = '-rating',
-    search_fields = 'title', 'tour__title'
-    list_filter = (
-        ('date', DateFieldListFilter),
-    )
-
-
 @admin.register(Tourorders)
 class TourordersAdmin(admin.ModelAdmin):
     list_display = (
-        'pk', 'tour', 'userid'
+        'pk', 'tour', 'userid', 'orderdate'
     )
     list_display_links = (
         'pk',
@@ -146,25 +116,10 @@ class ToursAdmin(admin.ModelAdmin):
     search_fields = 'title', 'city__country', 'city__name'
 
 
-@admin.register(Transferfeedback)
-class TransferfeedbackAdmin(admin.ModelAdmin):
-    list_display = (
-        'pk', 'title', 'transfer', 'rating'
-    )
-    list_display_links = (
-        'pk',
-    )
-    ordering = '-rating',
-    search_fields = 'title',
-    list_filter = (
-        ('date', DateFieldListFilter),
-    )
-
-
 @admin.register(Transferorders)
 class TransferordersAdmin(admin.ModelAdmin):
     list_display = (
-        'pk', 'userid', 'transfer', 'prices'
+        'pk', 'userid', 'transfer'
     )
     list_display_links = (
         'pk',

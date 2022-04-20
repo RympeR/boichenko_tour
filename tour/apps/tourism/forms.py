@@ -6,20 +6,18 @@ from django.contrib.auth.forms import AuthenticationForm
 
 
 class RegisterForm(UserCreationForm):
-    fio = forms.CharField(label='Имя', required=True, max_length=150, widget=forms.EmailInput(
-        attrs={'required': True, 'placeholder': 'Имя:'}))
-    username = forms.CharField(label='Имя', required=True, max_length=150, widget=forms.TextInput(
-        attrs={'required': True, 'placeholder': 'Имя:'}))
+    username = forms.CharField(label='Никнейм', required=True, max_length=150, widget=forms.TextInput(
+        attrs={'required': True, 'placeholder': 'Никнейм:'}))
     email = forms.EmailField(label='Почта', required=True, max_length=150, widget=forms.EmailInput(
-        attrs={'required': True, 'placeholder': 'Логин:'}))
-    password = forms.CharField(label='Пароль', required=True, widget=forms.PasswordInput(
+        attrs={'required': True, 'placeholder': 'Почта:'}))
+    password1 = forms.CharField(label='Пароль', required=True, widget=forms.PasswordInput(
         attrs={'required': True, 'placeholder': 'Пароль:', 'id': 'password'}))
     password2 = forms.CharField(label='Подтвердите пароль', required=True,  widget=forms.PasswordInput(
         attrs={'required': True, 'placeholder': 'Подтвердите пароль:', 'id': 'confirm_password'}))
 
     class Meta:
         model = Users
-        fields = 'username', 'email', 'fio', 'password'
+        fields = 'username', 'email',  'password1'
 
     def save(self, commit=True):
         user = super(RegisterForm, self).save(commit=False)
@@ -39,7 +37,6 @@ class UserLoginForm(AuthenticationForm):
         attrs={'required': True, 'placeholder': 'Логин:'}))
     password = forms.CharField(label='Пароль', required=True, widget=forms.PasswordInput(
         attrs={'required': True, 'placeholder': 'Пароль:', 'id': 'password'}))
-
 
 
 class ModelInfoRetrieveRoomForm(forms.Form):
@@ -80,7 +77,7 @@ class ModelInfoRetrieveRoomOrderForm(forms.Form):
         label='ID', required=True, queryset=Roomorders.objects.all())
     new_status = forms.ChoiceField(
         label='Status', required=True, choices=(
-            ('New', 'New',), ('Conform', 'Conform'), ('Ready', 'Ready'),), )
+            ('New', 'New',), ('Confirm', 'Confirm'), ('Ready', 'Ready'),), )
 
 
 class ModelInfoRetrieveTourOrderForm(forms.Form):
@@ -88,14 +85,14 @@ class ModelInfoRetrieveTourOrderForm(forms.Form):
         label='ID', required=True, queryset=Tourorders.objects.all())
     new_status = forms.ChoiceField(
         label='Status', required=True, choices=(
-            ('New', 'New',), ('Conform', 'Conform'), ('Ready', 'Ready'),), )
+            ('New', 'New',), ('Confirm', 'Confirm'), ('Ready', 'Ready'),), )
 
 
 class ModelInfoRetrieveTransferOrderForm(forms.Form):
     id_s = forms.ModelChoiceField(
         label='ID', required=True, queryset=Transferorders.objects.all())
     new_status = forms.ChoiceField(label='Status', required=True, choices=(
-        ('New', 'New',), ('Conform', 'Conform'), ('Ready', 'Ready'),), )
+        ('New', 'New',), ('Confirm', 'Confirm'), ('Ready', 'Ready'),), )
 
 
 class ModelInfoRetrievePolicyRoomOrderForm(forms.Form):

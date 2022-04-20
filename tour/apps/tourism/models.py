@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.urls import reverse
+import datetime
 
 
 class Users(AbstractUser):
@@ -103,21 +104,26 @@ class Roomorders(models.Model):
     ordernumber = models.AutoField(primary_key=True)
     userid = models.ForeignKey('Users', models.DO_NOTHING, db_column='userid')
     room = models.ForeignKey('Rooms', models.DO_NOTHING, db_column='room')
-    startdate = models.DateField(auto_now_add=True)
+    startdate = models.DateField()
     enddate = models.DateField()
     places = models.IntegerField()
-    prices = models.IntegerField()
-    orderdate = models.DateField()
+    orderdate = models.DateField(auto_now=True)
     insurancepolicy = models.CharField(max_length=255)
     status = models.CharField(max_length=255)
     manager = models.ForeignKey(
         Employees, models.DO_NOTHING, db_column='manager')
 
     def get_absolute_url(self):
-        return reverse('tourism:retrieve_users_orders', kwargs={'pk': self.userid.pk})
+        if self.userid.is_staff:
+            return reverse('tourism:retrieve_orders')
+        return reverse('tourism:retrieve_orders_client')
 
     def __str__(self):
         return f'{self.ordernumber} {self.userid}'
+
+    @property
+    def time_differnce(self):
+        return (self.enddate - self.startdate).days * self.room.price
 
 
 class Rooms(models.Model):
@@ -164,18 +170,22 @@ class Tourorders(models.Model):
     ordernumber = models.AutoField(primary_key=True)
     userid = models.ForeignKey('Users', models.DO_NOTHING, db_column='userid')
     tour = models.ForeignKey('Tours', models.DO_NOTHING, db_column='tour')
-    startdate = models.DateField(auto_now=True)
+    startdate = models.DateField()
     enddate = models.DateField()
     places = models.IntegerField()
-    prices = models.IntegerField()
-    orderdate = models.DateField()
+    orderdate = models.DateField(auto_now=True)
     insurancepolicy = models.CharField(max_length=255)
     status = models.CharField(max_length=255)
     manager = models.ForeignKey(
         Employees, models.DO_NOTHING, db_column='manager')
 
+    def time_differnce(self):
+        return (self.enddate - self.startdate).days * self.tour.price
+
     def get_absolute_url(self):
-        return reverse('tourism:retrieve_users_orders', kwargs={'pk': self.userid.pk})
+        if self.userid.is_staff:
+            return reverse('tourism:retrieve_orders')
+        return reverse('tourism:retrieve_orders_client')
 
     def __str__(self):
         return f'{self.ordernumber} {self.userid}'
@@ -214,15 +224,19 @@ class Transferorders(models.Model):
     startdate = models.DateField()
     enddate = models.DateField()
     places = models.IntegerField()
-    prices = models.IntegerField()
-    orderdate = models.DateField()
+    orderdate = models.DateField(auto_now=True)
     insurancepolicy = models.CharField(max_length=255)
     status = models.CharField(max_length=255)
     manager = models.ForeignKey(
         Employees, models.DO_NOTHING, db_column='manager')
 
+    def time_differnce(self):
+        return (self.enddate - self.startdate).days * self.transfer.price
+
     def get_absolute_url(self):
-        return reverse('tourism:retrieve_users_orders', kwargs={'pk': self.userid.pk})
+        if self.userid.is_staff:
+            return reverse('tourism:retrieve_orders')
+        return reverse('tourism:retrieve_orders_client')
 
     def __str__(self):
         return f'{self.ordernumber} {self.userid}'
